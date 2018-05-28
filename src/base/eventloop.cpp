@@ -24,11 +24,11 @@ void EventLoop::loop(){
 		doPenddingFuncs();
 	}	
 }
-void EventLoop::insert(std::function&& f){
+void EventLoop::doInLoop(DoInLoop&& f){
 	auto func = std::move(f);
-	mutex_.locl();
+	mutex_.lock();
 	pendingfuncs_.push_back(func);
-	mutex_.unlocl();
+	mutex_.unlock();
 }
 
 EventLoop& EventLoop::getNextLoop(){
@@ -39,7 +39,7 @@ EventLoop& EventLoop::getNextLoop(){
 }
 
 void EventLoop::doPenddingFuncs(){
-	std::vector<std::function> funcs;
+	std::vector<DoInLoop> funcs;
 	mutex_.lock();
 	funcs.swap(pendingfuncs_);
 	mutex_.unlocl();

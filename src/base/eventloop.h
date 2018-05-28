@@ -11,15 +11,17 @@ class Looper;
 
 class EventLoop{
 public:
+	typedef std::function<void()> DoInLoop;
+	
 	EventLoop(std::shared_ptr<Looper> looper, int threadNum);
 	~EventLoop();
 	void loop();
-	void insert(std::function&& fun);
+	void doInLoop(DoInLoop&& fun);
 	EventLoop& getNextLoop();
 	void doPenddingFuncs();
 private:
 	std::shared_ptr<Looper> looper_;
-	std::vector<function> pendingfuncs_;
+	std::vector<DoInLoop> pendingfuncs_;
 	std::vector<EventLoop> looppool_;
 	bool quit_;
 	int threadsz_;

@@ -1,17 +1,25 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 
+#include <memory>
+#include "context.h"
+#include <functional>
+
 extern const int MAX_LINE = 1024;
 extern const int 
 namespace SNODE{
 class Channel{
 public:
+	std::function<void (const char*, int len)> ReadFunc;
+	std::function<void (int)> ConnectFunc;
+
 	Channel(int fd);
 	~Channel();
 
-	void setReadFunc(std::function&& func);
+	void setReadFunc(ReadFunc&& func);
 	//void setWriteFunc(std::function&& func);
-	void setConnFunc(std::function&& func);
+	void setConnFunc(ConnectFunc&& func);
+	//void setContext(std::shared_ptr<Context> context);
 
 	void onRead();
 	void onConn(int fd);
@@ -22,7 +30,7 @@ public:
 	void evenHandler();
 private:
 	int fd_;
-	std::function<void (const char*, int sz)> readhandler_;
+	ReadFunc readhandler_;
 	//std::function<void (Channel&)> writehandler_;
 	std::function<void (int fd)> connhandler_;
 	char inbuff_[MAX_LINE];
@@ -36,6 +44,9 @@ private:
 
 	int revents_;
 	bool islisten_;
+
+	//std::shared_ptr<Context> context_;
+
 	//std::function<void (const Message*)> readhandler_;
 };
 }
