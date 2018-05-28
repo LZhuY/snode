@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+namespace SNODE{
+
 void LOG(const char* log){
 	std::cout<<log<<std::endl;
 }
@@ -13,6 +15,7 @@ void ERROR(const char* err){
 
 void WRR(const char* wrr){
 	std::cout<<wrr<<std::endl;
+}
 }
 
 #endif

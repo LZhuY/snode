@@ -4,6 +4,8 @@
 #include <vector>
 #include <functional>
 #include <memory>
+#include <thread>         
+#include <mutex>          
 
 class Looper;
 
@@ -14,12 +16,14 @@ public:
 	void loop();
 	void insert(std::function&& fun);
 	EventLoop& getNextLoop();
+	void doPenddingFuncs();
 private:
 	std::shared_ptr<Looper> looper_;
 	std::vector<function> pendingfuncs_;
 	std::vector<EventLoop> looppool_;
 	bool quit_;
 	int threadsz_;
+	std::mutex mutex_;
 };
 
 #endif
