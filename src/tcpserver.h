@@ -15,9 +15,9 @@ public:
 	typedef std::function<void (Channel*)> ConnectHandler;
 	//typedef std::function<void (const char*)> ReadHandler;
 
-	TcpServer(std::string& ip, int port);
+	TcpServer(std::shared_ptr<EventLoop>& loop, std::string& ip, int port);
 	void onConn(int fd);
-	void onRead(const char* buff, int sz);
+	void onRead(const char* buff, int sz, Channel* ch);
 	void start();
 	void stop();
 

@@ -17,7 +17,7 @@ class Operator;
 
 class EpollLooper: public Looper{
 public:
-	EpollLooper(std::string ip, int port);
+	EpollLooper();
 	~EpollLooper();
 
 	void updateChannel(int oper, Channel*);

@@ -64,6 +64,19 @@ void Channel::evenHandler(){
 	}
 }
 
+void Channel::listen(std::string ip, int port){
+	struct sockaddr_in serveraddr;
+	int fd = socket(AF_INET, SOCK_STREAM, 0);
+	SetSocketBlockingEnabled(fd);
+	memset(&serveraddr, 0, sizeof(sockaddr_in));
+	serveraddr.sin_family = AF_INET;
+	serveraddr.sin_addr.s_addr = htol(INADDR_ANY);
+	serveraddr.sin_port = htons(port);
+	bind(fd, (struct sockaddr*)&serveraddr, sizeof(sockaddr_in));
+	listen(fd, 10);
+	fd_ = fd;
+}
+
 /*void Channel::setContext(std::shared_ptr<Context> context){
 	context_ = context;
 }*/
