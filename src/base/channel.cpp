@@ -17,12 +17,14 @@ void Channel::setConnFunc(ConnectFunc&& func){
 }
 
 void Channel::onRead(){
-	int sz = read(fd_, inbuff_, MAX_LINE);
-	readhandler_(inbuff_, sz);
+	int sz = read(fd_, inbuff_+rinpos_, MAX_LINE);
+	rinpos_ += sz;
+	readhandler_(inbuff_+linpos_, sz);
+	linpos_ += sz;
 /*	context_->parse();
 	if(context_->isComplate()){
 		Message* msg = context_->getMessage();
-		
+
 	}*/
 }
 
