@@ -1,4 +1,7 @@
 #include "channel.h"
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 namespace SNODE{
 
@@ -17,9 +20,9 @@ void Channel::setConnFunc(ConnectFunc&& func){
 }
 
 void Channel::onRead(){
-	int sz = read(fd_, inbuff_+rinpos_, MAX_LINE);
+	int sz = recv(fd_, inbuff_+rinpos_, MAX_LINE, 0);
 	rinpos_ += sz;
-	readhandler_(inbuff_+linpos_, sz);
+	readhandler_(inbuff_+linpos_, sz, this);
 	linpos_ += sz;
 /*	context_->parse();
 	if(context_->isComplate()){
@@ -29,7 +32,7 @@ void Channel::onRead(){
 }
 
 void Channel::onWrite(){
-	int sz = write(fd_, outbuff_+loutpos_, routpos_-loutpos_);
+	int sz = send(fd_, outbuff_+loutpos_, routpos_-loutpos_, 0);
 	loutpos_ += sz;
 
 	if(routpos_ > loutpos_){
@@ -39,7 +42,7 @@ void Channel::onWrite(){
 	loutpos_ = 0;
 }
 
-bool Channel::write(const char* buff, int sz){
+bool Channel::writeToChannel(const char* buff, int sz){
 	if(routpos_ + sz > MAX_LINE)
 		return false;
 	memcpy(outbuff_+routpos_, buff, sz);
@@ -52,19 +55,19 @@ void Channel::onConn(int fd){
 
 void Channel::evenHandler(){
 	switch(revents_){
-		case EPOLLIN :
+		case 1 :
 			if(isListen())
 				onConn(fd);
 			else
 				onRead();
-		case EPOLLOUT:
+		case 2:
 			onWrite();
 		default:
-			//
+			int i=10;
 	}
 }
 
-void Channel::listen(std::string ip, int port){
+void Channel::listenChannel(std::string ip, int port){
 	struct sockaddr_in serveraddr;
 	int fd = socket(AF_INET, SOCK_STREAM, 0);
 	SetSocketBlockingEnabled(fd);

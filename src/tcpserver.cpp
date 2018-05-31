@@ -1,17 +1,20 @@
 #include "tcpserver.h"
-#include "../base/channel.h"
+#include "base/channel.h"
+#include <functional>
+#include <sys/epoll.h>
 
-using std::placeholders;
+using namespace std::placeholders;
 
 namespace SNODE{
 
-void TcpServer::TcpServer(std::shared_ptr<EventLoop>& loop, std::string& ip, int port):eventLoop_(loop){
-
+TcpServer::TcpServer(std::shared_ptr<EventLoop> loop, std::string ip, int port):eventLoop_(loop){
+	port_ = port;
+	ip_     = ip;
 }
 
 void TcpServer::start(){
 	Channel* ch = new Channel(0);
-	ch->listen(ip, port);
+	ch->listenChannel(ip_, port_);
 	eventLoop_->doInLoop( std::bind(&EpollLooper::updateChannel, eventLoop_->looper_, EPOLL_CTL_ADD, ch) );
 }
 void TcpServer::stop(){
@@ -25,7 +28,7 @@ EPOLL_CTL_MOD : 修改监听的事件
 */
 
 void TcpServer::onConn(int fd){
-	Channel* ch = new Channel();
+	Channel* ch = new Channel(0);
 	ch->setReadFunc( std::bind(&TcpServer::onRead, this, _1, _2, _3) );
 	eventLoop_->doInLoop( std::bind( &EpollLooper::updateChannel, eventLoop_->looper_, EPOLL_CTL_ADD, ch ) );
 }
@@ -42,6 +45,6 @@ void TcpServer::setConnectHandler(ConnectHandler&& func){
 }*/
 
 void TcpServer::onRead(const char* buff, int sz, Channel* ch){
-	std::cout<<buff<<std::endl;
+	//std::cout<<buff<<std::endl;
 }
 }

@@ -7,6 +7,8 @@
 #include <thread>         
 #include <mutex>          
 
+namespace SNODE{
+
 class Looper;
 
 class EventLoop{
@@ -19,13 +21,16 @@ public:
 	void doInLoop(LoopFunc&& fun);
 	EventLoop& getNextLoop();
 	void doPenddingFuncs();
-private:
+
 	std::shared_ptr<Looper> looper_;
+private:
+	
 	std::vector<LoopFunc> pendingfuncs_;
 	std::vector<EventLoop> looppool_;
 	bool quit_;
 	int threadsz_;
 	std::mutex mutex_;
 };
+}
 
 #endif

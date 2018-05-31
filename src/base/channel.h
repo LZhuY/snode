@@ -5,11 +5,10 @@
 #include "context.h"
 #include <functional>
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <fcntl.h>
 
 extern const int MAX_LINE = 1024;
-extern const int 
+ 
 namespace SNODE{
 
 bool SetSocketBlockingEnabled(int fd)
@@ -39,10 +38,10 @@ public:
 	void onConn(int fd);
 	void onWrite();
 
-	bool write(const char* buff, int sz);
+	bool writeToChannel(const char* buff, int sz);
 	bool isListen(){ return islisten_; };
 	void evenHandler();
-	void listen(std::string ip, int port);
+	void listenChannel(std::string ip, int port);
 private:
 	int fd_;
 	ReadFunc readhandler_;

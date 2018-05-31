@@ -24,7 +24,7 @@ public:
 	std::vector<Channel*>& getActicityChannels();
 
 private:
-	std::map<Channel*> channels_;
+	std::map<int, Channel*> channels_;
 	int epollfd_;
     struct epoll_event events_[MAX_EVENTS];
 };

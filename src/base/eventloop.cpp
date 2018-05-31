@@ -17,14 +17,14 @@ void EventLoop::loop(){
 		if(quit_) break;
 
 		std::vector<Channel*>& activitys = looper_->getActicityChannels();
-		for(auto iter : activitys){
+		for(auto iter =activitys.begin(); iter!=activitys.end(); iter++){
 			(*iter)->evenHandler();
 		}
 
 		doPenddingFuncs();
 	}	
 }
-void EventLoop::doInLoop(DoInLoop&& f){
+void EventLoop::doInLoop(LoopFunc&& f){
 	auto func = std::move(f);
 	mutex_.lock();
 	pendingfuncs_.push_back(func);
@@ -39,12 +39,12 @@ EventLoop& EventLoop::getNextLoop(){
 }
 
 void EventLoop::doPenddingFuncs(){
-	std::vector<DoInLoop> funcs;
+	std::vector<LoopFunc> funcs;
 	mutex_.lock();
 	funcs.swap(pendingfuncs_);
-	mutex_.unlocl();
-	for(auto func : funcs){
-		(*func)();
+	mutex_.unlock();
+	for(auto iter=funcs.begin(); iter!=funcs.end(); iter++){
+		(*iter)();
 	}
 }
 }
