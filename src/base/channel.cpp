@@ -57,7 +57,7 @@ void Channel::evenHandler(){
 	switch(revents_){
 		case 1 :
 			if(isListen())
-				onConn(fd);
+				onConn(fd_);
 			else
 				onRead();
 		case 2:

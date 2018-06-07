@@ -5,9 +5,9 @@
 namespace SNODE{
 
 EpollLooper::~EpollLooper(){
-	for(auto iter : channels_){
-		//iter->second
-	}
+/*	for(auto iter : channels_){
+		iter->second
+	}*/
 }
 
 EpollLooper::EpollLooper(){
@@ -17,7 +17,7 @@ EpollLooper::EpollLooper(){
 void EpollLooper::updateChannel(int oper, Channel* ch){
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
-	if( (auto iter = channels_.find(ch->fd_)) != channels_.end())
+	if( channels_.find(ch->fd_) != channels_.end())
 		return;
 	int s = epoll_ctl(epollfd_, oper, ch->fd_, &ev);
 	if(s == 0)
