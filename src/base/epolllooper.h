@@ -10,7 +10,7 @@
 #include <map>
 
 namespace SNODE{
-extern const int MAX_EVENTS = 1024;
+const int MAX_EVENTS = 1024;
 
 class Channel;
 class Operator;
