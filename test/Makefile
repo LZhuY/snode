@@ -5,4 +5,4 @@ OBJS = echo.cpp ../src/tcpserver.cpp ../src/base/channel.cpp ../src/base/epolllo
 TARGET = echo
 
 $(TARGET): $(OBJS)
-	g++ $(OBJS) -o $(TARGET) $(LINC) $(LIBS)  "-std=c++11"
+	g++ $(OBJS) -o $(TARGET) $(LINC) $(LIBS)  "-std=c++0x"
