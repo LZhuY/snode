@@ -43,8 +43,8 @@ public:
 	bool isListen(){ return islisten_; };
 	void evenHandler();
 	void listenChannel(std::string ip, int port);
-private:
 	int fd_;
+private:
 	ReadFunc readhandler_;
 	//std::function<void (Channel&)> writehandler_;
 	ConnectFunc connhandler_;

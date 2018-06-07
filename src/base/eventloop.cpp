@@ -1,5 +1,6 @@
 #include "eventloop.h"
 #include "channel.h"
+#include "looper.h"
 
 namespace SNODE{
 
