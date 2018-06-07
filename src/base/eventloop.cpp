@@ -4,10 +4,10 @@
 namespace SNODE{
 
 EventLoop::EventLoop(std::shared_ptr<Looper> looper, int threadNum):looper_(looper),threadsz_(threadNum){
-	if(threadNum > 0){
+/*	if(threadNum > 0){
 		for(int i=0; i<threadNum; i++)
 			looppool_.push_back( new EventLoop(looper, 0) );
-	}
+	}*/
 }
 EventLoop::~EventLoop(){
 /*	for(auto fun : pendingfuncs_){
