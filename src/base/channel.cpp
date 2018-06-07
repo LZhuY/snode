@@ -73,7 +73,7 @@ void Channel::listenChannel(std::string ip, int port){
 	SetSocketBlockingEnabled(fd);
 	memset(&serveraddr, 0, sizeof(sockaddr_in));
 	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_addr.s_addr = htol(INADDR_ANY);
+	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serveraddr.sin_port = htons(port);
 	bind(fd, (struct sockaddr*)&serveraddr, sizeof(sockaddr_in));
 	listen(fd, 10);
