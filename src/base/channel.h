@@ -6,6 +6,7 @@
 #include <functional>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <string>
 
 extern const int MAX_LINE = 1024;
  
