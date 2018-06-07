@@ -1,6 +1,8 @@
 #ifndef EVENT_LOOP_H
 #define EVENT_LOOP_H
 
+#include "looper.h"
+
 #include <vector>
 #include <functional>
 #include <memory>
@@ -8,8 +10,6 @@
 #include <mutex>          
 
 namespace SNODE{
-
-class Looper;
 
 class EventLoop{
 public:

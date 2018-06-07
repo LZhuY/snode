@@ -44,6 +44,7 @@ public:
 	void evenHandler();
 	void listenChannel(std::string ip, int port);
 	int fd_;
+	int revents_;
 private:
 	ReadFunc readhandler_;
 	//std::function<void (Channel&)> writehandler_;
@@ -57,7 +58,7 @@ private:
 	int linpos_;
 	int rinpos_;
 
-	int revents_;
+	
 	bool islisten_;
 
 	//std::shared_ptr<Context> context_;

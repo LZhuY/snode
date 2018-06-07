@@ -1,6 +1,5 @@
 #include "eventloop.h"
 #include "channel.h"
-#include "looper.h"
 
 namespace SNODE{
 
@@ -19,7 +18,7 @@ void EventLoop::loop(){
 	while(true){
 		if(quit_) break;
 
-		std::vector<Channel*>& activitys = looper_->getActicityChannels();
+		std::vector<Channel*> activitys = looper_->getActicityChannels();
 		for(auto iter =activitys.begin(); iter!=activitys.end(); iter++){
 			(*iter)->evenHandler();
 		}
