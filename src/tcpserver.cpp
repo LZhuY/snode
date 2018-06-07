@@ -15,7 +15,7 @@ TcpServer::TcpServer(std::shared_ptr<EventLoop> loop, std::string ip, int port):
 void TcpServer::start(){
 	Channel* ch = new Channel(0);
 	ch->listenChannel(ip_, port_);
-	eventLoop_->doInLoop( std::bind(&EpollLooper::updateChannel, eventLoop_->looper_, EPOLL_CTL_ADD, ch) );
+	//eventLoop_->doInLoop( std::bind(&EpollLooper::updateChannel, eventLoop_->looper_, EPOLL_CTL_ADD, ch) );
 }
 void TcpServer::stop(){
 	
