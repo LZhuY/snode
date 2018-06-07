@@ -1,4 +1,6 @@
 #include "eventloop.h"
+#include "channel.h"
+
 namespace SNODE{
 
 EventLoop::EventLoop(std::shared_ptr<Looper> looper, int threadNum):looper_(looper),threadsz_(threadNum){

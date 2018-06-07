@@ -27,12 +27,12 @@ void EpollLooper::updateChannel(int oper, Channel* ch){
 std::vector<Channel*>& EpollLooper::getActicityChannels(){
 	int nfds = epoll_wait(epollfd_, events_, MAX_EVENTS, -1);
 	std::vector<Channel*> tmp;
-	Channel* ch = nullptr;
+	Channel* ch = NULL;
 	for(int i=0; i<nfds; i++){
 		int fd = events_[i].data.fd;
 		auto iter = channels_.find(fd);
 		if(iter != channels_.end()){
-			ch = *(iter->second);
+			ch = &(*(iter->second));
 			ch->revents_ = events_[i].events;
 			tmp.push_back(ch);
 		}
