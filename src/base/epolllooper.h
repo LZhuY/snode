@@ -21,7 +21,7 @@ public:
 	~EpollLooper();
 
 	void updateChannel(int oper, Channel*);
-	std::vector<Channel*>& getActicityChannels();
+	std::vector<Channel*> getActicityChannels();
 
 private:
 	std::map<int, Channel*> channels_;

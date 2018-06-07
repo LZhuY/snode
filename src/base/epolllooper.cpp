@@ -1,5 +1,6 @@
 #include "epolllooper.h"
 #include "operator.h"
+#include "channel.h"
 #include "log.h"
 
 namespace SNODE{
@@ -24,7 +25,7 @@ void EpollLooper::updateChannel(int oper, Channel* ch){
 		channels_[ch->fd_] = ch;
 }
 
-std::vector<Channel*>& EpollLooper::getActicityChannels(){
+std::vector<Channel*> EpollLooper::getActicityChannels(){
 	int nfds = epoll_wait(epollfd_, events_, MAX_EVENTS, -1);
 	std::vector<Channel*> tmp;
 	Channel* ch = NULL;
