@@ -9,6 +9,10 @@ Channel::Channel(int fd):fd_(fd){
 
 }
 
+Channel::~Channel(){
+
+}
+
 void Channel::setReadFunc(ReadFunc&& func){
 	readhandler_ = std::move(func);
 }
@@ -31,6 +35,10 @@ void Channel::onRead(){
 	}*/
 }
 
+void Channel::onConn(int fd){
+	connhandler_(fd);
+}
+
 void Channel::onWrite(){
 	int sz = send(fd_, outbuff_+loutpos_, routpos_-loutpos_, 0);
 	loutpos_ += sz;
@@ -48,9 +56,6 @@ bool Channel::writeToChannel(const char* buff, int sz){
 	memcpy(outbuff_+routpos_, buff, sz);
 	routpos_ += sz;
 	return true;
-}
-void Channel::onConn(int fd){
-	connhandler_(fd);
 }
 
 void Channel::evenHandler(){

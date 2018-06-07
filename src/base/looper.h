@@ -10,9 +10,9 @@ class Channel;
 class Looper{
 public:
 	//Looper();
-	virtual ~Looper();
-	virtual void updateChannel(Channel*);
-	virtual std::vector<Channel*>& getActicityChannels();
+	virtual ~Looper()=0;
+	virtual void updateChannel(Channel*)=0;
+	virtual std::vector<Channel*>& getActicityChannels()=0;
 private:
 	//std::vector<Channel> channels_;
 };
