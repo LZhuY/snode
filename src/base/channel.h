@@ -12,16 +12,6 @@ namespace SNODE{
 
 const int MAX_LINE = 1024;
 
-bool SetSocketBlockingEnabled(int fd)
-{
-   if (fd < 0) return false;
-   int flags = fcntl(fd, F_GETFL, 0);
-   if (flags == -1) return false;
-   flags = (flags | O_NONBLOCK);
-   return (fcntl(fd, F_SETFL, flags) == 0) ? true : false;
-}
-
-
 class Channel{
 public:
 	typedef std::function<void (const char*, int len, Channel*)> ReadFunc;
