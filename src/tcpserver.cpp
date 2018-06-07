@@ -30,7 +30,7 @@ EPOLL_CTL_MOD : 修改监听的事件
 void TcpServer::onConn(int fd){
 	Channel* ch = new Channel(0);
 	ch->setReadFunc( std::bind(&TcpServer::onRead, this, _1, _2, _3) );
-	eventLoop_->doInLoop( std::bind( &EpollLooper::updateChannel, eventLoop_->looper_, EPOLL_CTL_ADD, ch ) );
+	//eventLoop_->doInLoop( std::bind( &EpollLooper::updateChannel, eventLoop_->looper_, EPOLL_CTL_ADD, ch ) );
 }
 
 void TcpServer::setMessageHandler(MessageHandler&& func){
