@@ -18,11 +18,11 @@ EpollLooper::EpollLooper(){
 void EpollLooper::updateChannel(int oper, Channel* ch){
 	struct epoll_event ev;
 	ev.events = EPOLLIN;
-	if( channels_.find(ch->fd_) != channels_.end())
-		return;
-	int s = epoll_ctl(epollfd_, oper, ch->fd_, &ev);
-	if(s == 0)
-		channels_[ch->fd_] = ch;
+	if( channels_.find(ch->fd_) == channels_.end()){
+		int s = epoll_ctl(epollfd_, oper, ch->fd_, &ev);
+		if(s == 0)
+			channels_[ch->fd_] = ch;
+	}
 }
 
 std::vector<Channel*> EpollLooper::getActicityChannels(){
