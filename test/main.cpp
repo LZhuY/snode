@@ -1,8 +1,8 @@
-#include "..\src\base\Looper.h"
-#include "..\src\base\Channel.h"
-#include "..\src\base\EpollLooper.h"
-#include "..\src\base\EventLoop.h"
-#include "..\src\base\TcpServer.h"
+#include "../src/base/Looper.h"
+#include "../src/base/Channel.h"
+#include "../src/base/EpollLooper.h"
+#include "../src/base/EventLoop.h"
+#include "../src/base/TcpServer.h"
 #include "echo.h"
 
 #include <iostream>

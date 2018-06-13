@@ -1,8 +1,8 @@
 #ifndef _ECHO_H_
 #define _ECHO_H_
 
-#include "..\src\base\TcpServer.h"
-#include "..\src\base\EventLoop.h"
+#include "../src/base/TcpServer.h"
+#include "../src/base/EventLoop.h"
 
 using namespace SNODE;
 
