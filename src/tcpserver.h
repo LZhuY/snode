@@ -1,40 +1,34 @@
-#ifndef TCP_SERVER_H
-#define TCP_SERVER_H
-#include <string>
-#include <memory>
+#ifndef _TCPSERVER_H_
+#define _TCPSERVER_H_
 
-#include "base/eventloop.h"
-#include "base/epolllooper.h"
-#include "base/server.h"
+#include "EventLoop.h"
+
+#include <string>
+#include <functional>
 
 namespace SNODE{
 
-class Message;
 class Channel;
 
-class TcpServer: public Server{
+class TcpServer{
 public:
-	typedef std::function<void (Message*)> MessageHandler;
-	typedef std::function<void (Channel*)> ConnectHandler;
-	//typedef std::function<void (const char*)> ReadHandler;
+	typedef std::function<void(Channel*, const char*, int sz)>  MessageHandler;
+	typedef std::function<void(int,int)>   ErrorHandFunc;
 
-	TcpServer(std::shared_ptr<EventLoop> loop, std::string ip, int port);
-	void onConn(int fd);
-	void onRead(const char* buff, int sz, Channel* ch);
-	void start();
-	void stop();
+	TcpServer(unsigned int threadNum);
 
-	void setMessageHandler(MessageHandler&& func);
-	void setConnectHandler(ConnectHandler&& func);
-	//void setReadHandler(ReadHandler&& func);
+	void setMessageHandler(MessageHandler&& func) { messageHandler_ = std::move(func); }
+	void setErrorHandFunc(ErrorHandFunc&& func){ errorHandFunc_ = std::move(func); }
+	void setEventLoop(EventLoop* loop) { eventLoop_ = loop; }
+	void startListen(std::string ip, int port);
+	void onConnect(int fd);
 private:
-	std::shared_ptr<EventLoop> eventLoop_;
 	MessageHandler messageHandler_;
-	ConnectHandler connectHandler_;
-	int port_;
-	std::string ip_;
-	//ReadHandler    readHandler_;
-};
+	ErrorHandFunc  errorHandFunc_;
 
+	EventLoop* eventLoop_;
+	std::shared_ptr<EventLoopPool> eventLoopPool_;
+};
 }
+
 #endif

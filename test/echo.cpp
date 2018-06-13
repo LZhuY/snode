@@ -1,16 +1,19 @@
-#include <iostream>
-#include "../src/tcpserver.h"
-#include "../src/base/epolllooper.h"
+#include "echo.h"
+#include "./src/base/Channel.h"
 
-using namespace SNODE;
+void Echo::setEventLoop(std::shared_ptr<EventLoop>& loop){
+	eventLoop_ = loop;
+}
+void Echo::setMessageHandler(MessageHandler&& func){
+	messageHandler_ = std::move(func);
+}
 
-int main(int argc, char** argv){
-	EpollLooper epollLooper;
-	std::shared_ptr<EpollLooper> looPtr(&epollLooper);
-	EventLoop eventLoop(looPtr, 0);
+void Echo::setTcpServer(TcpServer* server){
+	server_ = server;
+	server_->setMessageHandler( std::bind( &Echo::onMessageHandler, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 ));
+}
 
-	std::shared_ptr<EventLoop> elPtr(&eventLoop);
-	TcpServer server(elPtr, std::string("ip"), 8900);
-	server.start();
-	eventLoop.loop();
+void Echo::onMessageHandler(Channel* ch, const char* msg, int sz){
+	if(messageHandler_)
+		messageHandler_(ch, msg, sz);
 }
