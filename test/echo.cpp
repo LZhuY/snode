@@ -1,5 +1,5 @@
 #include "echo.h"
-#include "./src/base/Channel.h"
+#include "../src/base/Channel.h"
 
 void Echo::setEventLoop(std::shared_ptr<EventLoop>& loop){
 	eventLoop_ = loop;
