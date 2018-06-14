@@ -11,12 +11,13 @@ namespace SNODE{
 
 	int EventLoop::loop(){
 		stop_ = false;
+		std::vector<Channel*> activitys;
 		while(!stop_){
 			if(looper_ != NULL){
-				std::vector<Channel*> activitys = looper_->getActivityChannels();
-				//for(auto ch : activitys){
-				//	ch->handlerEvent();
-				//}
+				looper_->getActivityChannels(activitys);
+				for( std::vector<Channel*>::iterator iter = activitys.begin(); iter!=activitys.end();iter++ ){
+					(*iter)->handlerEvent();
+				}
 			}
 
 			doPendingFunc();
@@ -34,9 +35,9 @@ namespace SNODE{
 	void EventLoop::doPendingFunc(){
 		std::vector<RunInLoopFun> tmp = pendingFuncs_;
 		pendingFuncs_.clear();
-		//for(auto func : tmp){
-		//	func();
-		//}
+		for( std::vector<RunInLoopFun>::iterator iter=tmp.begin(); iter != tmp.end(); iter++ ){
+			(*iter)();
+		}
 	}
 
 	void EventLoop::setLooper(Looper* ptr){

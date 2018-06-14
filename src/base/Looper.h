@@ -11,7 +11,7 @@ class Looper{
 public:
 	virtual ~Looper(){}
 	virtual void updateChannel(int oper, Channel*)=0;
-	virtual std::vector<Channel*> getActivityChannels()=0;
+	virtual void getActivityChannels(std::vector<Channel*>&)=0;
 };
 
 }
