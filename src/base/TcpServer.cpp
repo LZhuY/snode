@@ -12,12 +12,17 @@ namespace SNODE{
 		if(threadNum > 1 ){
 			eventLoopPool_ = std::shared_ptr<EventLoopPool>(new EventLoopPool(threadNum));
 		}
+		else
+		{
+			//eventLoopPool_ = NULL;
+		}
 	}
 
 	void TcpServer::startListen(std::string ip, int port){
 		int code = 0;
 		struct sockaddr_in addr;
 		int fd = socket(AF_INET, SOCK_STREAM, 0);
+		
 		if(fd == -1){
 			std::cout<< "socket error" << std::endl;
 			return;
@@ -33,13 +38,15 @@ namespace SNODE{
 			return;
 		}
 
+		socket_non_blocking(fd);
 		code = listen(fd, 10);
 		if(code == -1){
 			std::cout<< "listen error" << std::endl;
 			return;
 		}
+		std::cout<< "listen" << std::endl;
 
-		Channel* channel = new Channel(fd);
+		Channel* channel = new Channel(fd, true);
 		channel->events_ = EPOLL_CTL_ADD;
 
 		channel->setConnectHandFunc(std::bind(&TcpServer::onConnect, this,std::placeholders::_1));
@@ -47,14 +54,16 @@ namespace SNODE{
 	}
 
 	void TcpServer::onConnect(int fd){
-		Channel* channel = new Channel(fd);
+		std::cout << "TcpServer::onConnect" << std::endl;
+		Channel* channel = new Channel(fd, false);
 		channel->setMessageHandFunc(messageHandler_);
+		channel->events_ = EPOLL_CTL_ADD;
 		//channel->setErrorHandler();
-		if(eventLoopPool_ != NULL){
-			auto eventLoop = eventLoopPool_->getEventLoop();
-			eventLoop->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop, 1, channel ) );
-		}else{
+		//if(eventLoopPool_ != NULL){
+			//auto eventLoop = eventLoopPool_->getEventLoop();
+			//eventLoop->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop, 1, channel ) );
+		//}else{
 			eventLoop_->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop_, 1, channel ) );
-		}
+		//}
 	}
 }

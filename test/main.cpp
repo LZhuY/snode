@@ -5,25 +5,48 @@
 #include "../src/base/TcpServer.h"
 #include "echo.h"
 
+#include <signal.h> 
+#include <unistd.h> 
+
 #include <iostream>
 #include <memory>
 #include <string>
 
 using namespace SNODE;
 
+void sigroutine(int sig) {
+switch (sig) { 
+	case 1: 
+		printf("Get a signal -- SIGHUP "); 
+		break; 
+	case 2: 
+		printf("Get a signal -- SIGINT "); 
+		break; 
+	case 3: 
+		printf("Get a signal -- SIGQUIT "); 
+		break;
+	} 
+	return;
+} 
+
 void MessageHandler(Channel* ch, const char* msg, int sz){
 	std::cout<< msg << " " << sz << std::endl;
 	ch->writeToChannel(msg, sz);
 }
 
-int main(int argc, char** argv){	
+int main(int argc, char** argv){
+
+	signal(SIGHUP, sigroutine); //* 下面设置三个信号的处理方法 
+	signal(SIGINT, sigroutine); 
+	signal(SIGQUIT, sigroutine);
+
 	EpollLooper epollLooper;
 	EventLoop eventLoop(-1);
 	eventLoop.setLooper( &epollLooper );
 	
-	TcpServer server(8);
+	TcpServer server(0);
 	server.setEventLoop( &eventLoop );
-	server.startListen(std::string("127.0.0.1"), 9889);
+	server.startListen(std::string("127.0.0.1"), 9981);
 	
 	Echo echo;
 	echo.setTcpServer(&server);

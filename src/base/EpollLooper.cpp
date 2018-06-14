@@ -19,12 +19,14 @@ void EpollLooper::updateChannel(int opr, Channel* ch){
 	if(res == -1){
 		std::cout << "epoll ctl error" << std::endl;
 	}
+	std::cout << "updateChannel" << ch->events_ << std::endl;
 	channels_.insert( std::make_pair(ch->fd_, ch) );
 }
 
 void EpollLooper::getActivityChannels(std::vector<Channel*>& channels){
-	int n = epoll_wait(efd_, events_, MAX_EVENT_NUM, -1);
+	int n = epoll_wait(efd_, events_, MAX_EVENT_NUM, 0);
 	if(n > 0 ){
+		std::cout << " epoll wait " << n << std::endl;
 		for(int i=0;i<n;i++){
 			int fd = events_[i].data.fd;
 			auto iter = channels_.find(fd);

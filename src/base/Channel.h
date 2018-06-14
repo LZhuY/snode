@@ -5,8 +5,27 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#include <sys/socket.h>
+#include <fcntl.h>
 
 namespace SNODE{
+
+static int socket_non_blocking(int sfd)
+{  
+	int flags, s;
+	flags = fcntl(sfd, F_GETFL, 0);
+	if (flags == -1)
+	{  
+		return -1;
+	}
+	flags |= O_NONBLOCK;
+	s = fcntl (sfd, F_SETFL, flags);
+	if (s == -1)
+	{
+		return -1;
+	}
+	return 0;
+}
 
 const int MAX_BUFF_SIZE = 1024*16;
 
@@ -16,12 +35,13 @@ public:
 	typedef std::function<void (Channel*, const char*, int)> MessageHandFunc;
 	typedef std::function<void (int)> ConnectHandFunc;
 
-	Channel(int fd):fd_(fd){  }
+	Channel(int fd, bool isListen=false):fd_(fd),isListen_(isListen){  }
 
-	void onRead(int fd);
-	void onWrite(int fd);
+	//void onRead(int fd);
+	void onWrite();
 	void writeToChannel(const char* buff, int sz);
 	void handlerEvent();
+	bool isListen(){ return isListen_; }
 
 	void setErrorHandler(ErrorHandlerFunc& func){ errorHandler_ = func;  }
 	void setMessageHandFunc(MessageHandFunc& func){ messageHandFunc_ = func; }
@@ -29,7 +49,8 @@ public:
 	int fd_;
 	int events_; //
 private:
-	unsigned char buff_[MAX_BUFF_SIZE];
+	bool isListen_;
+	char buff_[MAX_BUFF_SIZE];
 	ErrorHandlerFunc errorHandler_;
 	MessageHandFunc messageHandFunc_;
 	ConnectHandFunc connectHandFunc_;

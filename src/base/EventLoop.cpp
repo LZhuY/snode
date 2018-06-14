@@ -19,10 +19,10 @@ namespace SNODE{
 					(*iter)->handlerEvent();
 				}
 			}
-
+			activitys.clear();
 			doPendingFunc();
-			std::cout << " EventLoop::loop() "<< iNo_ << std::endl;
-			break;
+			//std::cout << " EventLoop::loop() "<< iNo_ << std::endl;
+			//break;
 		}
 		return 0;
 	}
@@ -30,6 +30,7 @@ namespace SNODE{
 	void EventLoop::runInLoop(RunInLoopFun&& fun){
 		RunInLoopFun func = std::move(fun);
 		pendingFuncs_.push_back(func);
+		std::cout << "runInLoop" << std::endl;
 	}
 
 	void EventLoop::doPendingFunc(){
