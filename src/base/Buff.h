@@ -78,17 +78,13 @@ namespace SNODE{
 		}
 
 		bool isComplete(){
-			if(curSize_ == 0)
-				return false;
-
-			if( size() >= INTSIZE)
+			if( size() >= INTSIZE && curSize_ == 0){
 				read(curSize_);
+			}
 			return curSize_>=size();
 		}
 
 		void reset(){
-			lpos_ = 0;
-			rpos_ = 0;
 			curSize_=0;
 		}
 

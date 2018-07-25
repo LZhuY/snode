@@ -16,6 +16,12 @@ void Echo::setTcpServer(TcpServer* server){
 }
 
 void Echo::onMessageHandler(Channel* ch, Buff& buff, int sz){
-	if(messageHandler_)
-		messageHandler_(ch, buff, sz);
+	int fid = 0, i=0;
+	std::string str;
+	buff << fid;
+	buff << i;
+	buff << str;
+
+	std::cout << "fid="<<fid << " " << "i="<<i << " " << str << std::endl;
+	buff.reset();
 }
