@@ -1,6 +1,8 @@
 #ifndef _CHANNEL_H_
 #define _CHANNEL_H_
 
+#include "Buff.h"
+#include "NetStream.h"
 #include <memory>
 #include <functional>
 #include <iostream>
@@ -40,7 +42,7 @@ public:
 	//void onRead(int fd);
 	void onWrite();
 	void writeToChannel(const char* buff, int sz);
-	void handlerEvent();
+	void handlerEvent() override;
 	bool isListen(){ return isListen_; }
 
 	void setErrorHandler(ErrorHandlerFunc& func){ errorHandler_ = func;  }
@@ -50,7 +52,8 @@ public:
 	int events_; //
 private:
 	bool isListen_;
-	char buff_[MAX_BUFF_SIZE];
+	char cache_[MAX_BUFF_SIZE];
+	Buff buff_;
 	ErrorHandlerFunc errorHandler_;
 	MessageHandFunc messageHandFunc_;
 	ConnectHandFunc connectHandFunc_;

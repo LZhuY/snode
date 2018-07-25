@@ -13,9 +13,10 @@ namespace SNODE{
 			connectHandFunc_(fd);
 		}else{
 			if(events_ &  EPOLLIN){
-				int n = recv(fd_, buff_, MAX_BUFF_SIZE, 0);
-				if(n > 0){
-					messageHandFunc_(this, buff_, n);
+				int n = recv(fd_, cache_, MAX_BUFF_SIZE, 0);
+				buff_.append(cache_, n);
+				if( buff_.isComplete() ){
+					messageHandFunc_(this, buff_, 0);
 				}
 				else{
 					//std::cout << "disconnet" << std::endl;
