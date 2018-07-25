@@ -1,20 +1,27 @@
-#include "Client.h"
-EchoClient::EchoClient(std::string ip, int port){
-	struct sockaddr_in    servaddr;
-	fd_ = socket(AF_INET, SOCK_STREAM, 0);
-	servaddr.sin_family = AF_INT;
-	servaddr.sin_port = htons(9981);
+#include "../scr/base/Buff.h"
+#include <iostream>
 
-	memset(&servaddr, 0, sizeof(servaddr));
-	inet_pton(AF_INET, ip.data(), &servaddr.sin_addr);
+using namespace SNODE;
 
-	int res = connect(fd_, (struct sockaddr*)&servaddr, sizeof(servaddr));
-}
+int main(int argc, char** argv){
+	if(argc < 2)
+		return -1;
 
-void EchoClient::SendMsg(Buff* buff){
-	send(fd_, buff.data(), buff.size(), 0);
-}
+	struct sockaddr_in serveradd;
+	memset(&serveradd, 0, sizeof(serveradd));
 
-void EchoClient::Close(){
-	close(fd_);
+	serveradd.sin_port = htons(atoi(argv[0]));
+	serveradd.sin_family = AF_INET;
+	serveradd.sin_addr = inet_addr(argv[1]);
+	int fd = socket(AF_INET, SOCK_STREAM, 0);
+	connect(fd, (struct sockaddr*)&serveradd, sizeof(serveradd));
+
+	SNODE::Buff buff;
+	int fid = 1;
+	int i = 1024;
+	std::string msg("12345");
+	buff >> fid >> i >> msg;
+	buff.preappend(buff.size());
+
+	send(fd, buff.data(), buff.size(), 0);
 }

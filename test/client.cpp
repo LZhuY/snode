@@ -1,6 +1,8 @@
 #include "../scr/base/Buff.h"
 #include <iostream>
 
+using namespace SNODE;
+
 int main(int argc, char** argv){
 	if(argc < 2)
 		return -1;
@@ -14,8 +16,12 @@ int main(int argc, char** argv){
 	int fd = socket(AF_INET, SOCK_STREAM, 0);
 	connect(fd, (struct sockaddr*)&serveradd, sizeof(serveradd));
 
-	Buff buff;
+	SNODE::Buff buff;
+	int fid = 1;
+	int i = 1024;
 	std::string msg("12345");
-	buff.append(msg.data(), msg.size());
+	buff >> fid >> i >> msg;
+	buff.preappend(buff.size());
+
 	send(fd, buff.data(), buff.size(), 0);
 }
