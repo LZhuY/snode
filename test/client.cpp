@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <iostream>
 
 using namespace SNODE;
@@ -17,9 +18,9 @@ int main(int argc, char** argv){
 	struct sockaddr_in serveradd;
 	memset(&serveradd, 0, sizeof(serveradd));
 
-	serveradd.sin_port = htons(atoi(argv[0]));
+	serveradd.sin_port = htons(atoi(argv[1]));
 	serveradd.sin_family = AF_INET;
-	serveradd.sin_addr = inet_addr(argv[1]);
+	serveradd.sin_addr.s_addr = inet_addr(argv[2]);
 	int fd = socket(AF_INET, SOCK_STREAM, 0);
 	connect(fd, (struct sockaddr*)&serveradd, sizeof(serveradd));
 
