@@ -1,4 +1,4 @@
-#include "../scr/base/Buff.h"
+#include "../src/base/Buff.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
