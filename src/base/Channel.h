@@ -2,7 +2,6 @@
 #define _CHANNEL_H_
 
 #include "Buff.h"
-#include "NetStream.h"
 #include <memory>
 #include <functional>
 #include <iostream>
@@ -31,10 +30,12 @@ static int socket_non_blocking(int sfd)
 
 const int MAX_BUFF_SIZE = 1024*16;
 
+class Buff;
+
 class Channel{
 public:
 	typedef std::function<void(int)> ErrorHandlerFunc;
-	typedef std::function<void (Channel*, const char*, int)> MessageHandFunc;
+	typedef std::function<void (Channel*, Buff&, int)> MessageHandFunc;
 	typedef std::function<void (int)> ConnectHandFunc;
 
 	Channel(int fd, bool isListen=false):fd_(fd),isListen_(isListen){  }
@@ -42,7 +43,7 @@ public:
 	//void onRead(int fd);
 	void onWrite();
 	void writeToChannel(const char* buff, int sz);
-	void handlerEvent() override;
+	void handlerEvent();
 	bool isListen(){ return isListen_; }
 
 	void setErrorHandler(ErrorHandlerFunc& func){ errorHandler_ = func;  }

@@ -3,7 +3,7 @@
 #include "../src/base/EpollLooper.h"
 #include "../src/base/EventLoop.h"
 #include "../src/base/TcpServer.h"
-#include "../scr/base/Buff.h"
+#include "../src/base/Buff.h"
 #include "echo.h"
 
 #include <signal.h> 
@@ -30,7 +30,7 @@ switch (sig) {
 	return;
 } 
 
-void MessageHandler(Channel* ch, Buff& buff, int sz){
+void MessageHandler(Channel* ch, SNODE::Buff& buff, int sz){
 	std::cout<< buff.data() << " " << sz << std::endl;
 	ch->writeToChannel(buff.data(), sz);
 }

@@ -2,6 +2,7 @@
 #define BUFF_H
 
 #include <assert.h>
+#include <string.h>
 #include <string>
 #include <memory>
 

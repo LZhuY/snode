@@ -6,9 +6,11 @@
 
 using namespace SNODE;
 
+class SNODE::Buff;
+
 class Echo {
 public:
-	typedef std::function<void(Channel*, const char* , int sz)> MessageHandler;
+	typedef std::function<void(Channel*, SNODE::Buff& , int sz)> MessageHandler;
 
 	Echo(){}
 	~Echo(){}
@@ -16,7 +18,7 @@ public:
 	void setEventLoop(std::shared_ptr<EventLoop>& loop);
 	void setTcpServer(TcpServer* server);
 	void setMessageHandler(MessageHandler&& func);
-	void onMessageHandler(Channel*, const char*, int sz);
+	void onMessageHandler(Channel*, SNODE::Buff&, int sz);
 private:
 	MessageHandler messageHandler_;
 	std::shared_ptr<EventLoop> eventLoop_;
