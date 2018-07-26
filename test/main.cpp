@@ -18,14 +18,16 @@ using namespace SNODE;
 void sigroutine(int sig) {
 switch (sig) { 
 	case 1: 
-		printf("Get a signal -- SIGHUP "); 
+		printf("Get a signal -- SIGHUP");
 		break; 
 	case 2: 
-		printf("Get a signal -- SIGINT "); 
+		printf("Get a signal -- SIGINT"); 
 		break; 
 	case 3: 
 		printf("Get a signal -- SIGQUIT "); 
 		break;
+	default:
+		printf("Get a signal -- SIGQUIT "); 
 	} 
 	return;
 } 

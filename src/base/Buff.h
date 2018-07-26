@@ -20,12 +20,6 @@ namespace SNODE{
 			lpos_+=sz;
 		}
 		void read(int& i){
-			i = 0;
-			//i = (i|buff_[lpos_++]);i = (i<<8);
-			//i = (i|buff_[lpos_++]);i = (i<<8);
-			//i = (i|buff_[lpos_++]);i = (i<<8);
-			//i = (i|buff_[lpos_++]);
-
 			i = buff_[lpos_+3] & 0xff | (buff_[lpos_+2] & 0xff) << 8 | (buff_[lpos_+1] & 0xff) << 16| (buff_[lpos_] & 0xff) << 24;
 			lpos_+=4;
 			if(lpos_ == rpos_){
@@ -81,7 +75,7 @@ namespace SNODE{
 			if( size() >= INTSIZE && curSize_ == 0){
 				read(curSize_);
 			}
-			return curSize_>=size();
+			return curSize_>=size() && size()>0;
 		}
 
 		void reset(){
