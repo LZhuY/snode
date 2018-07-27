@@ -1,7 +1,7 @@
 #ifndef HALL_H
 #define HALL_H
 
-#include "../base/Uncopy.h"
+#include "../base/App.h"
 
 namespace SNODE{
 	class Hall:public App {

@@ -11,7 +11,7 @@ namespace SNODE{
 		type_ = Conf::getConf()->getStr("type");
 	}
 	void Hall::loop(){
-		
+
 	}
 	void Hall::fini(){
 
@@ -22,4 +22,13 @@ namespace SNODE{
 
 	//void doZmqMsg();
 	//void doNetMsg();
+}
+
+using namespace SNODE;
+
+int main(int argc, char** argv){
+	Conf::getConf()->setVal("port", argv[1]);
+
+	Hall hall;
+	hall.start();
 }

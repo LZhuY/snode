@@ -6,7 +6,7 @@ namespace SNODE{
 	void Router::init(){
 		sid_ = Conf::getConf()->getInt("sid");
 		type_ = Conf::getConf()->getStr("type");
-		
+
 		if(zmq_ == NULL)
 			zmq_ = new ZmqNode(ZMQ_ROUTER);
 		const char* identity = "Router";
@@ -44,3 +44,12 @@ namespace SNODE{
 	}
 }
 
+
+using namespace SNODE;
+
+int main(int argc, char** argv){
+	Conf::getConf()->setVal("port", argv[1]);
+	
+	Router router;
+	router.start();
+}
