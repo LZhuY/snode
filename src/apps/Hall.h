@@ -1,11 +1,10 @@
-#ifndef ROUTER_H
-#define ROUTER_H
+#ifndef HALL_H
+#define HALL_H
 
-#include "../base/App.h"
+#include "../base/Uncopy.h"
 
 namespace SNODE{
-	class Router : public App{
-	public:
+	class Hall:public App {
 		void start();
 		void init();
 		void loop();
@@ -13,9 +12,6 @@ namespace SNODE{
 		//void doZmqMsg();
 		//void doNetMsg();
 		void update();
-	private:
-		ZmqNode* zmq_;
-		int sid_;
 	};
 }
 

@@ -10,7 +10,8 @@ namespace SNODE{
 		virtual void init()=0;
 		virtual void loop()=0;
 		virtual void fini()=0;
-		virtual void doMsg()=0;
+		virtual void doZmqMsg(){};
+		virtual void doNetMsg(){};
 		virtual void update()=0;
 	};
 }
