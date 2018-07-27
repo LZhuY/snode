@@ -2,6 +2,7 @@
 #define APP_H
 
 #include "../base/Uncopy.h"
+#include <string>
 
 namespace SNODE{
 	class App : public Uncopy{
@@ -13,6 +14,9 @@ namespace SNODE{
 		virtual void doZmqMsg(){};
 		virtual void doNetMsg(){};
 		virtual void update()=0;
+	protected:
+		int sid_;
+		std::string type_;
 	};
 }
 

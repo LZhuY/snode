@@ -15,7 +15,7 @@ namespace SNODE{
 		void update();
 	private:
 		ZmqNode* zmq_;
-		int sid_;
+		//int sid_;
 	};
 }
 

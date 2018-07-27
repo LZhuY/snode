@@ -5,6 +5,7 @@
 
 namespace SNODE{
 	class Hall:public App {
+	public:
 		void start();
 		void init();
 		void loop();
@@ -12,6 +13,8 @@ namespace SNODE{
 		//void doZmqMsg();
 		//void doNetMsg();
 		void update();
+	private:
+		//int sid_;
 	};
 }
 
