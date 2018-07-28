@@ -13,13 +13,17 @@ namespace SNODE{
 			connectHandFunc_(fd);
 		}else{
 			if(events_ &  EPOLLIN){
+				if(onReadMssage_){
+					onReadMssage_();
+					return;
+				}
 				int n = recv(fd_, cache_, MAX_BUFF_SIZE, 0);
 				buff_.append(cache_, n);
 
 				std::cout << buff_.data() << " " << n << std::endl;
 				if( buff_.isComplete()){
 					std::cout << "complete" << std::endl;
-					messageHandFunc_(this, buff_, 0);
+					messageHandFunc_((void*)&buff_);
 				}
 				else{
 					//std::cout << "disconnet" << std::endl;

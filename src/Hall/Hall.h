@@ -11,8 +11,8 @@ namespace SNODE{
 		void init();
 		void loop();
 		void fini();
-		//void doZmqMsg();
-		//void doNetMsg();
+		//void doZmqMsg(void* msg);
+		//void doNetMsg(void* msg);
 		void update();
 	private:
 		//int sid_;

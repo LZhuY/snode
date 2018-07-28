@@ -13,7 +13,7 @@ class Channel;
 
 class TcpServer{
 public:
-	typedef std::function<void(Channel*, Buff&, int sz)>  MessageHandler;
+	typedef std::function<void(void*)>  MessageHandler;
 	typedef std::function<void(int,int)>   ErrorHandFunc;
 
 	TcpServer(unsigned int threadNum);

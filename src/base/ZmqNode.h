@@ -15,6 +15,8 @@ namespace SNODE{
 		int connect(const char* addr);
 		void setOpt(int opt, const void* val, size_t sz);
 
+		void setEventLoop(EventLoop* loop){eventLoop_ = loop;};
+
 		void lock();
 		void unlock();
 		int sendMsg(Zmqmsg*);
@@ -23,6 +25,7 @@ namespace SNODE{
 		int itype_;
 		void* ctx_;
 		void* sock_;
+		EventLoop* eventLoop_;
 	};
 }
 

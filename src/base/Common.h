@@ -12,6 +12,10 @@ typedef struct {
 }Zmqmsg;
 
 typedef struct {
+	
+}Netmsg;
+
+typedef struct {
     void * sock;
     int iType;
 }ZmqSock;

@@ -1,3 +1,4 @@
+#include "EventLoop.h"
 #include "ZmqNode.h"
 #include <iostream>
 
@@ -5,12 +6,7 @@ namespace SNODE{
 
 ZmqNode::ZmqNode(int itype):itype_(itype){
 	ctx_ = zmq_ctx_new();
-    if(ctx_ == NULL)
-        std::cout << "zmq_ctx_new error" << std::endl;
 	sock_ = zmq_socket(ctx_, itype);
-    if(sock_ == NULL)
-        std::cout << "zmq_socket error" << std::endl;
-    std::cout << "zmqnode init" << std::endl;
 }
 
 ZmqNode::~ZmqNode(){
@@ -23,10 +19,22 @@ void ZmqNode::unlock(){}
 
 int ZmqNode::bind(const char* addr){
 	zmq_bind(sock_, addr);
+    //int fd = zsock_fd(sock_);
+
+    //Channel* channel = new Channel(fd, false);
+    //channel->setOnReadMssage( std::bind( &ZmqNode::recvMsg, this ) );
+    //channel->events_ = EPOLL_CTL_ADD;
+    //eventLoop_->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop_, 1, channel ) );
 }
 
 int ZmqNode::connect(const char* addr){
 	zmq_connect(sock_, addr);
+    //int fd = zsock_fd(sock_);
+
+    //Channel* channel = new Channel(fd, false);
+    //channel->setOnReadMssage( std::bind( &ZmqNode::recvMsg, this ) );
+    //channel->events_ = EPOLL_CTL_ADD;
+    //eventLoop_->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop_, 1, channel ) );
 }
 
 void ZmqNode::setOpt(int opt, const void* val, size_t sz){
@@ -73,7 +81,7 @@ int ZmqNode::sendMsg(Zmqmsg* zMsg){
             break;
         }
     }while(0);
-    errno = 0;
+    errno = 1;
     zmq_strerror(errno);
     unlock();
     return errno;
@@ -115,7 +123,7 @@ int ZmqNode::recvMsg(Zmqmsg* zMsg){
         }
     }while(0);
     unlock();
-   	errno = 0;
+   	errno = 1;
     zmq_strerror(errno);
     return errno;
 }

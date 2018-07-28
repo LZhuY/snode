@@ -35,8 +35,9 @@ class Buff;
 class Channel{
 public:
 	typedef std::function<void(int)> ErrorHandlerFunc;
-	typedef std::function<void (Channel*, Buff&, int)> MessageHandFunc;
+	typedef std::function<void (void*)> MessageHandFunc;
 	typedef std::function<void (int)> ConnectHandFunc;
+	typedef std::function<void ()> OnReadMssage;
 
 	Channel(int fd, bool isListen=false):fd_(fd),isListen_(isListen){  }
 
@@ -46,6 +47,7 @@ public:
 	void handlerEvent();
 	bool isListen(){ return isListen_; }
 
+	void setOnReadMssage(OnReadMssage& func){ onReadMssage_ = func; }
 	void setErrorHandler(ErrorHandlerFunc& func){ errorHandler_ = func;  }
 	void setMessageHandFunc(MessageHandFunc& func){ messageHandFunc_ = func; }
 	void setConnectHandFunc(ConnectHandFunc&& func){ connectHandFunc_ = std::move(func); }
@@ -58,6 +60,7 @@ private:
 	ErrorHandlerFunc errorHandler_;
 	MessageHandFunc messageHandFunc_;
 	ConnectHandFunc connectHandFunc_;
+	OnReadMssage onReadMssage_;
 };
 
 }

@@ -6,13 +6,13 @@ namespace SNODE{
 	EventLoop::EventLoop(int iNo):iNo_(iNo),looper_(NULL){ 
 	};
 	EventLoop::~EventLoop(){
-		
+		delete looper_;
 	};
 
 	int EventLoop::loop(){
 		stop_ = false;
 		std::vector<Channel*> activitys;
-		while(!stop_){
+		//while(!stop_){
 			if(looper_ != NULL){
 				looper_->getActivityChannels(activitys);
 				for( std::vector<Channel*>::iterator iter = activitys.begin(); iter!=activitys.end();iter++ ){
@@ -23,7 +23,7 @@ namespace SNODE{
 			doPendingFunc();
 			//std::cout << " EventLoop::loop() "<< iNo_ << std::endl;
 			//break;
-		}
+		//}
 		return 0;
 	}
 
