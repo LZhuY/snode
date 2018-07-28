@@ -29,7 +29,7 @@ int ZmqNode::connect(const char* addr){
 	zmq_connect(sock_, addr);
 }
 
-void ZmqNode::setOpt(int opt, const char* val, size_t sz){
+void ZmqNode::setOpt(int opt, const void* val, size_t sz){
     std::cout << opt << val << sz << std::endl;
 	int code = zmq_setsockopt(sock_, opt, val, sz);
 }

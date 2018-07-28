@@ -13,7 +13,7 @@ namespace SNODE{
 		~ZmqNode();
 		int bind(const char* addr);
 		int connect(const char* addr);
-		void setOpt(int opt, const char* val, size_t sz);
+		void setOpt(int opt, const void* val, size_t sz);
 
 		void lock();
 		void unlock();

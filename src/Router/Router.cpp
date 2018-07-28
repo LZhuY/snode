@@ -1,19 +1,16 @@
 #include "Router.h"
 #include "../base/ZmqNode.h"
 #include "../base/Conf.h"
-#include <iostream>
 
 namespace SNODE{
 	void Router::init(){
 		sid_ = Conf::getConf()->getInt("sid");
 		type_ = Conf::getConf()->getStr("type");
+		std::string addr = Conf::getConf()->getStr("routerAddr");
+		
 		zmq_ = new ZmqNode(ZMQ_ROUTER);
-
-		const char* identity = "Router";
-		zmq_->setOpt(ZMQ_IDENTITY, identity, strlen(identity));
-
-		const char* addr = "tcp://127.0.0.1:8001";
-		zmq_->bind(addr);
+		zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
+		zmq_->bind(addr.c_str());
 	}
 	void Router::loop(){
 		while(true){
