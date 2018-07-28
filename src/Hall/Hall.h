@@ -6,6 +6,7 @@
 namespace SNODE{
 	class Hall:public App {
 	public:
+		Hall():App(){}
 		void start();
 		void init();
 		void loop();

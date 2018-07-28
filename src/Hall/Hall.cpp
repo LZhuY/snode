@@ -1,3 +1,4 @@
+#include "../base/Conf.h"
 #include "Hall.h"
 
 namespace SNODE{

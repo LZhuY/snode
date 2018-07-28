@@ -15,7 +15,10 @@ namespace SNODE{
 			if(events_ &  EPOLLIN){
 				int n = recv(fd_, cache_, MAX_BUFF_SIZE, 0);
 				buff_.append(cache_, n);
+
+				std::cout << buff_.data() << " " << n << std::endl;
 				if( buff_.isComplete()){
+					std::cout << "complete" << std::endl;
 					messageHandFunc_(this, buff_, 0);
 				}
 				else{

@@ -7,6 +7,7 @@
 namespace SNODE{
 	class App : public Uncopy{
 	public:
+		App():Uncopy(){}
 		virtual void start()=0;
 		virtual void init()=0;
 		virtual void loop()=0;

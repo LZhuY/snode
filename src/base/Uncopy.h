@@ -4,6 +4,8 @@
 namespace SNODE{
 
 	class Uncopy{
+	public:
+		Uncopy(){}
 	private:
 		Uncopy(Uncopy& ori){}
 		Uncopy& operator = (Uncopy& rhs){}

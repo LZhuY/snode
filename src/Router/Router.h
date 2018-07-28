@@ -4,8 +4,10 @@
 #include "../base/App.h"
 
 namespace SNODE{
+	class ZmqNode;
 	class Router : public App{
 	public:
+		Router():App(){}
 		void start();
 		void init();
 		void loop();

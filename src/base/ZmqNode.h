@@ -1,6 +1,8 @@
 #ifndef ZMQNODE_H
 #define ZMQNODE_H
 
+#include <string.h>
+#include <string>
 #include <zmq.h>
 #include "Common.h"
 
@@ -9,14 +11,14 @@ namespace SNODE{
 	public:
 		ZmqNode(int itype);
 		~ZmqNode();
-		int bind(std::stirng& addr);
-		int connect(std::string& addr);
-		void setOpt(int opt, const void* val, int sz);
+		int bind(const char* addr);
+		int connect(const char* addr);
+		void setOpt(int opt, const char* val, size_t sz);
 
 		void lock();
 		void unlock();
-		int sendMsg(Zmqmsg&);
-		int recvMsg(Zmqmsg&);
+		int sendMsg(Zmqmsg*);
+		int recvMsg(Zmqmsg*);
 	private:
 		int itype_;
 		void* ctx_;
