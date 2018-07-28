@@ -43,10 +43,13 @@ namespace SNODE{
 	}
 	void Router::doNetMsg(void* msg){
 		Buff& buff = *((Buff*)msg);
-/*		int fid=0, i=0;
-		std::string str;
-		buff << fid << i << str;
-		std::cout << "doNetMsg " << "fid="<<fid << " i="<<i << " str="<<str << std::endl;*/
+		Head head;
+		buff << head.sid << head.fid << head.coid << head.eid << head.ssn ;
+		if(head.sid == sid_){
+
+		}else{
+			
+		}
 	}
 
 	void Router::update(){

@@ -11,6 +11,14 @@ typedef struct {
 	char szMsg[MSG_LEN];
 }Zmqmsg;
 
+typedef struct{
+	int sid;
+	int fid;
+	int coid;
+	int eid;
+	int ssn;
+} MsgHead;
+
 typedef struct {
 	
 }Netmsg;
