@@ -10,31 +10,22 @@ namespace SNODE{
 	void Router::init(){
 		sid_ = Conf::getConf()->getInt("sid");
 		type_ = Conf::getConf()->getStr("type");
-		std::string addr = Conf::getConf()->getStr("routerAddr");
+		std::string addr = Conf::getConf()->getStr("listenAddr");
 		int port = Conf::getConf()->getInt("port");
 		
-		zmq_ = new ZmqNode(ZMQ_ROUTER);
-		zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
-		zmq_->bind(addr.c_str());
+		//zmq_ = new ZmqNode(ZMQ_ROUTER);
+		//zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
+		//zmq_->bind(addr.c_str());
 		
 		eventLoop_ = new EventLoop(-1);
 		eventLoop_->setLooper(new EpollLooper());
 		net_ = new TcpServer(0);
+		net_->setMessageHandler( std::bind(&Router::doNetMsg, this, std::placeholders::_1 ) );
 		net_->setEventLoop(eventLoop_);
-		net_->startListen(std::string("127.0.0.1"), port);
-		//net_->setMessageHandler( std::bind(&Router::doNetMsg, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3 ) );
+		net_->startListen(addr, port);
 	}
 	void Router::loop(){
-		while(true){
-			Zmqmsg zMsg;
-			memset(&zMsg, 0, sizeof(zMsg));
-			if(zmq_->recvMsg(&zMsg)){
-				std::cout << "recvMsg" << std::endl;
-				zmq_->sendMsg(&zMsg);
-				memset(&zMsg, 0, sizeof(zMsg));
-			}
-			eventLoop_->loop();
-		}
+		eventLoop_->loop();
 	}
 	void Router::fini(){
 		delete zmq_;
@@ -51,8 +42,11 @@ namespace SNODE{
 
 	}
 	void Router::doNetMsg(void* msg){
-		//Buff* buff = (Buff*)msg;
-		//std::cout << buff->data() << std::endl;
+		Buff& buff = *((Buff*)msg);
+/*		int fid=0, i=0;
+		std::string str;
+		buff << fid << i << str;
+		std::cout << "doNetMsg " << "fid="<<fid << " i="<<i << " str="<<str << std::endl;*/
 	}
 
 	void Router::update(){

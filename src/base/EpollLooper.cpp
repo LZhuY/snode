@@ -19,8 +19,9 @@ void EpollLooper::updateChannel(int opr, Channel* ch){
 	if(res == -1){
 		std::cout << "epoll ctl error" << std::endl;
 	}
-	std::cout << "updateChannel" << ch->events_ << std::endl;
+	std::cout << "updateChannel 111" << ch->events_ << std::endl;
 	channels_.insert( std::make_pair(ch->fd_, ch) );
+	std::cout << "updateChannel 222" << ch->events_ << std::endl;
 }
 
 void EpollLooper::getActivityChannels(std::vector<Channel*>& channels){

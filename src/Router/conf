@@ -1,4 +1,5 @@
 sid 1001
 type router
 routerAddr tcp://127.0.0.1:8001
-port 9982
+
+listenAddr 127.0.0.1

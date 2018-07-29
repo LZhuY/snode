@@ -13,10 +13,6 @@ namespace SNODE{
 			connectHandFunc_(fd);
 		}else{
 			if(events_ &  EPOLLIN){
-				if(onReadMssage_){
-					onReadMssage_();
-					return;
-				}
 				int n = recv(fd_, cache_, MAX_BUFF_SIZE, 0);
 				buff_.append(cache_, n);
 

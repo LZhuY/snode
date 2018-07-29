@@ -90,6 +90,10 @@ namespace SNODE{
 			return rpos_-lpos_;
 		}
 
+		int addSize(){
+			preappend(size());
+		}
+
 	private:
 		char buff_[BUFFMAXSIZE];
 		int lpos_;
