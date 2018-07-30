@@ -15,6 +15,7 @@ namespace SNODE{
 		//zmq_ = new ZmqNode(ZMQ_DEALER);
 		//zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
 		//zmq_->zmq_connect(addr.c_str());
+		App::Self_ = this;
 	}
 	void Hall::loop(){
 

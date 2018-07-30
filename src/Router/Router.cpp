@@ -33,6 +33,7 @@ namespace SNODE{
 		char myAddr[1024];
 		snprint(myAddr, "127.0.0.1:%d", port);
 		registerNode(zk, path, myAddr);*/
+		App::Self_ = this;
 	}
 	void Router::loop(){
 		eventLoop_->loop();

@@ -15,6 +15,11 @@ namespace SNODE{
 		virtual void doZmqMsg(void* msg){}
 		virtual void doNetMsg(void* msg){}
 		virtual void update()=0;
+
+		virtual void onServerOnline(const char* type, int sid){}
+		virtual void onServerOffline(const char* type, int sid){}
+		static App* getServer(){ return Self_; }
+		static App* Self_;
 	protected:
 		int sid_;
 		std::string type_;
