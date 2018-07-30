@@ -1,4 +1,4 @@
-#ifndef ZMQNODE_H
+/*#ifndef ZMQNODE_H
 #define ZMQNODE_H
 
 #include <string.h>
@@ -29,4 +29,4 @@ namespace SNODE{
 	};
 }
 
-#endif
+#endif*/

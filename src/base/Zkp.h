@@ -61,8 +61,8 @@ namespace SNODE{
 			for(auto iter=oldValues.begin(); iter!=oldValues.end(); ){
 				if( tmpValues.find(iter->first) == tmpValues.end() ){
 					// todo server offline
-/*					App::getServer()->onServerOffline(iter->first.c_str(), atoi(iter->second.c_str()));
-					iter = oldValues.erase(iter);*/
+					App::getServer()->onServerOffline(iter->first.c_str(), atoi(iter->second.c_str()));
+					iter = oldValues.erase(iter);
 				}else
 					iter++;
 			}
@@ -70,8 +70,8 @@ namespace SNODE{
 			for(auto iter=tmpValues.begin(); iter!=tmpValues.end(); iter++){
 				if(oldValues.find(iter->first) == oldValues.end()){
 					//todo server online
-/*					App::getServer()->onServerOnline(iter->first.c_str(), atoi(iter->second.c_str()));
-					oldValues.insert( std::pair<std::string, std::string>(iter->first, iter->second) );*/
+					App::getServer()->onServerOnline(iter->first.c_str(), atoi(iter->second.c_str()));
+					oldValues.insert( std::pair<std::string, std::string>(iter->first, iter->second) );
 				}
 			}
 		}

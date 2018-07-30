@@ -1,4 +1,4 @@
-LIBS = -L/usr/local/lib  -lzookeeper_mt -levent -lzmq -lpthread  -ldl
+LIBS = -L/usr/local/lib  -lzookeeper_mt -levent  -lpthread  -ldl
 LINC = -I/usr/local/include -I/usr/local/include/zookeeper
 
 OBJS = ../base/TcpServer.cpp ../base/Channel.cpp ../base/EpollLooper.cpp ../base/EventLoop.cpp ../base/EventLoopPool.cpp ../base/Buff.h \

@@ -5,6 +5,7 @@
 #include "../base/EpollLooper.h"
 #include "../base/EventLoop.h"
 #include "../base/Zkp.h"
+#include "../base/Common.h"
 #include <iostream>
 
 namespace SNODE{
@@ -33,13 +34,13 @@ namespace SNODE{
 		char myAddr[1024];
 		snprint(myAddr, "127.0.0.1:%d", port);
 		registerNode(zk, path, myAddr);*/
-		//App::Self_ = this;
+		App::Self_ = this;
 	}
 	void Router::loop(){
 		eventLoop_->loop();
 	}
 	void Router::fini(){
-		delete zmq_;
+		//delete zmq_;
 		delete net_;
 		delete eventLoop_;
 	}

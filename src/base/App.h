@@ -25,6 +25,7 @@ namespace SNODE{
 		int sid_;
 		std::string type_;
 	};
+	App* App::Self_ = 0;
 }
 
 #endif
