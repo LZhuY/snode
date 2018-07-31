@@ -4,6 +4,7 @@
 #include "../base/Conf.h"
 #include "../base/EpollLooper.h"
 #include "../base/EventLoop.h"
+#include "../base/Zkp.h"
 #include <iostream>
 
 namespace SNODE{
@@ -16,13 +17,22 @@ namespace SNODE{
 		//zmq_ = new ZmqNode(ZMQ_ROUTER);
 		//zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
 		//zmq_->bind(addr.c_str());
-		
+
 		eventLoop_ = new EventLoop(-1);
 		eventLoop_->setLooper(new EpollLooper());
 		net_ = new TcpServer(0);
 		net_->setMessageHandler( std::bind(&Router::doNetMsg, this, std::placeholders::_1 ) );
 		net_->setEventLoop(eventLoop_);
 		net_->startListen(addr, port);
+
+		std::string zkHost = Conf::getConf()->getStr("zkHost");
+		zk_ = initZkp(zkHost.c_str(), "/Server/Router");
+
+/*		char path[1024];
+		snprint(path, "/Server/Router/%d", sid_);
+		char myAddr[1024];
+		snprint(myAddr, "127.0.0.1:%d", port);
+		registerNode(zk, path, myAddr);*/
 	}
 	void Router::loop(){
 		eventLoop_->loop();

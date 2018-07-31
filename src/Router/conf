@@ -3,3 +3,4 @@ type router
 routerAddr tcp://127.0.0.1:8001
 
 listenAddr 127.0.0.1
+zkHost 127.0.0.1:2181

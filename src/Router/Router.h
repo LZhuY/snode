@@ -23,6 +23,7 @@ namespace SNODE{
 		EpollLooper* epollLooper_;
 		ZmqNode* zmq_;
 		TcpServer* net_;
+		zhandle_t* zk_;
 		//int sid_;
 	};
 }
