@@ -6,4 +6,4 @@ OBJS = ../base/TcpServer.cpp ../base/Channel.cpp ../base/EpollLooper.cpp ../base
 TARGET = Router
 
 $(TARGET): $(OBJS)
-	g++ $(OBJS) -o $(TARGET) $(LIBS) $(LINC)  "-std=c++0x"
+	g++ $(OBJS) -o $(TARGET) $(LIBS) $(LINC)  "-std=c++0x" # 

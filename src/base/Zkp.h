@@ -17,24 +17,7 @@ namespace SNODE{
 	static struct String_vector svector;
 	static char valbuff[1024];
 	static const char* serverType[] = {"Hall", "Router", "DB"};
-
-	class ZKp;
-
-	void watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx){
-		std::cout << "watcher " << type << " " << state << " " << path << std::endl;
-		ZKp* zkp = (ZKp*) watcherCtx;
-		switch(type){
-/*			case ZOO_SESSION_EVENT:
-				zkp->onStateChange();
-			case ZOO_CHILD_EVENT:
-				zkp->onChildrenChange(path);
-			case ZOO_DELETED_EVENT:
-			case ZOO_CHANGED_EVENT:
-				//todo
-			default:
-				std::cout << "" std::endl;*/
-		}
-	}
+	void watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx);
 
 	class ZKp{
 	public:
@@ -62,7 +45,7 @@ namespace SNODE{
 				if( tmpValues.find(iter->first) == tmpValues.end() ){
 					// todo server offline
 					App::getServer()->onServerOffline(iter->first.c_str(), atoi(iter->second.c_str()));
-					iter = oldValues.erase(iter);
+					oldValues.erase(iter++);
 				}else
 					iter++;
 			}
@@ -76,13 +59,14 @@ namespace SNODE{
 			}
 		}
 
-		void onStateChange(zhandle_t* zh, int stat){
-			switch(stat){
-/*				case ZOO_CLOSED_STATE:
-					reConnect();
-				case ZOO_CONNECTED_STATE:
-					std::cout << " " << std::endl;*/
-			}
+		void onStateChange(int stat){
+			/*if(stat == ZOO_CLOSED_STATE)
+			{
+				reConnect();
+			}else if(stat == ZOO_CONNECTED_STATE){
+				std::cout << "ZOO_CONNECTED_STATE" << std::endl;
+			}*/
+			reConnect();
 		}
 
 		void reConnect(){
@@ -113,6 +97,16 @@ namespace SNODE{
 		std::string host_;
 		std::map<std::string, std::map<std::string, std::string>> values_;	
 	};
+
+	void watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx){
+		std::cout << "watcher " << type << " " << state << " " << path << std::endl;
+		ZKp* zkp = (ZKp*) watcherCtx;
+		if(type == ZOO_SESSION_EVENT){
+			zkp->onStateChange(state);
+		}else if(type == ZOO_CHILD_EVENT){
+			zkp->onChildrenChange(path);
+		}
+	}
 }
 
 #endif
