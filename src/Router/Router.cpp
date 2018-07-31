@@ -26,14 +26,14 @@ namespace SNODE{
 		net_->startListen(addr, port);
 
 		std::string zkHost = Conf::getConf()->getStr("zkHost");
-		zk_ = initZkp(zkHost.c_str(), "/Server/Router");
+		zk_ = new ZKp(zkHost);
 
 /*		char path[1024];
 		snprint(path, "/Server/Router/%d", sid_);
 		char myAddr[1024];
 		snprint(myAddr, "127.0.0.1:%d", port);
 		registerNode(zk, path, myAddr);*/
-		App::Self_ = this;
+		//App::Self_ = this;
 	}
 	void Router::loop(){
 		eventLoop_->loop();
@@ -54,7 +54,7 @@ namespace SNODE{
 	}
 	void Router::doNetMsg(void* msg){
 		Buff& buff = *((Buff*)msg);
-		Head head;
+		MsgHead head;
 		buff << head.sid << head.fid << head.coid << head.eid << head.ssn ;
 		if(head.sid == sid_){
 

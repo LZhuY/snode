@@ -5,6 +5,7 @@
 #include "../base/TcpServer.h"
 
 namespace SNODE{
+	class ZKp;
 	class EventLoop;
 	class EpollLooper;
 	class ZmqNode;
@@ -23,7 +24,7 @@ namespace SNODE{
 		EpollLooper* epollLooper_;
 		ZmqNode* zmq_;
 		TcpServer* net_;
-		zhandle_t* zk_;
+		ZKp* zk_;
 		//int sid_;
 	};
 }

@@ -5,6 +5,7 @@
 #include <string>
 
 namespace SNODE{
+	class App;
 	class App : public Uncopy{
 	public:
 		App():Uncopy(){}
