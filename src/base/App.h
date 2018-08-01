@@ -2,7 +2,11 @@
 #define APP_H
 
 #include "../base/Uncopy.h"
+extern "C"{
+	#include <cstdlib>
+}
 #include <string>
+#include <iostream>
 
 namespace SNODE{
 	class App;
@@ -17,8 +21,18 @@ namespace SNODE{
 		virtual void doNetMsg(void* msg){}
 		virtual void update()=0;
 
-		virtual void onServerOnline(const char* type, int sid){}
-		virtual void onServerOffline(const char* type, int sid){}
+		virtual void onServerOnline(const char* path, const char* val){
+			char sty[25];
+			char sid[25];
+			sscanf(path, "%[0-9a-z]/%[0-9a-z]", sty, sid);
+			std::cout<< sty << " " << sid << " " << val << std::endl;
+		}
+		virtual void onServerOffline(const char* path, const char* val){
+			char sty[25];
+			char sid[25];
+			sscanf(path, "%[0-9a-z]/%[0-9a-z]", sty, sid);
+			std::cout<< sty << " " << sid << " " << val << std::endl;
+		}
 		static App* getServer(){ return Self_; }
 		static App* Self_;
 	protected:

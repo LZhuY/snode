@@ -6,6 +6,10 @@
 #include "../base/EventLoop.h"
 #include "../base/Zkp.h"
 #include "../base/Common.h"
+
+extern "C"{
+	#include <stdio.h>
+}
 #include <iostream>
 
 namespace SNODE{
@@ -27,13 +31,13 @@ namespace SNODE{
 		net_->startListen(addr, port);
 
 		std::string zkHost = Conf::getConf()->getStr("zkHost");
-		zk_ = new ZKp(zkHost);
+		zkp_ = new ZKp(zkHost);
 
-/*		char path[1024];
-		snprint(path, "/Server/Router/%d", sid_);
+		char path[1024];
+		snprintf(path, 1024, "/Router/%d", sid_);
 		char myAddr[1024];
-		snprint(myAddr, "127.0.0.1:%d", port);
-		registerNode(zk, path, myAddr);*/
+		snprintf(myAddr, 1024, "127.0.0.1:%d", port);
+		zkp_->registerNode(path, myAddr);
 		App::Self_ = this;
 	}
 	void Router::loop(){
@@ -74,6 +78,7 @@ using namespace SNODE;
 
 int main(int argc, char** argv){
 	Conf::getConf()->setVal("port", argv[1]);
+	Conf::getConf()->setVal("sid", argv[2]);
 	
 	Router router;
 	router.start();

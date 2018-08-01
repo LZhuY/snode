@@ -16,12 +16,12 @@ extern "C"{
 namespace SNODE{
 	static struct String_vector svector;
 	static char valbuff[1024];
-	static const char* serverType[] = {"Hall", "Router", "DB"};
+	static const char* serverType[] = {"/Hall", "/Router", "/DB"};
 	void watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx);
 
 	class ZKp{
 	public:
-		ZKp(std::string host):host_(host),state_(ZOO_CONNECTING_STATE){
+		ZKp(std::string host):zh_(NULL),host_(host),state_(ZOO_CONNECTING_STATE){
 			initZkp(host.c_str());
 		}
 
@@ -44,7 +44,7 @@ namespace SNODE{
 			for(auto iter=oldValues.begin(); iter!=oldValues.end(); ){
 				if( tmpValues.find(iter->first) == tmpValues.end() ){
 					// todo server offline
-					App::getServer()->onServerOffline(iter->first.c_str(), atoi(iter->second.c_str()));
+					App::getServer()->onServerOffline(iter->first.c_str(), iter->second.c_str());
 					oldValues.erase(iter++);
 				}else
 					iter++;
@@ -53,7 +53,7 @@ namespace SNODE{
 			for(auto iter=tmpValues.begin(); iter!=tmpValues.end(); iter++){
 				if(oldValues.find(iter->first) == oldValues.end()){
 					//todo server online
-					App::getServer()->onServerOnline(iter->first.c_str(), atoi(iter->second.c_str()));
+					App::getServer()->onServerOnline(iter->first.c_str(), iter->second.c_str());
 					oldValues.insert( std::pair<std::string, std::string>(iter->first, iter->second) );
 				}
 			}
@@ -86,10 +86,11 @@ namespace SNODE{
 			return zh_;
 		}
 
-		void registerNode(zhandle_t* zh, const char* path, const char* value){
+		void registerNode(const char* path, const char* value){
+			std::cout << " registerNode " << path << " " << value << std::endl;
 			char path_buff[1024];
-			zoo_create(zh, path, value, strlen(value), &ZOO_OPEN_ACL_UNSAFE, 0, path_buff, 1024);
-			std::cout << "registerNode " << path_buff << std::endl;
+			zoo_create(zh_, path, value, strlen(value), &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL, path_buff, 1024);
+			//std::cout << "registerNode " << path_buff << std::endl;
 		}
 	private:
 		bool state_;
@@ -99,7 +100,7 @@ namespace SNODE{
 	};
 
 	void watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx){
-		std::cout << "watcher " << type << " " << state << " " << path << std::endl;
+		std::cout << "watcher watcher " << type << " " << state << " " << path << std::endl;
 		ZKp* zkp = (ZKp*) watcherCtx;
 		if(type == ZOO_SESSION_EVENT){
 			zkp->onStateChange(state);

@@ -34,7 +34,8 @@ namespace SNODE{
 			}
 
 			void setVal(const char* key, const char* val){
-				vals_.insert( std::pair<std::string, std::string>(std::string(key), std::string(val)) );
+				//vals_.insert( std::pair<std::string, std::string>(std::string(key), std::string(val)) );
+				vals_[std::string(key)] = std::string(val);
 			}
 
 			static Conf* getConf(){
