@@ -1,3 +1,7 @@
 sid 2001
-type hall
+type Hall
+
 routerAddr tcp://127.0.0.1:8001
+
+MyAddr 127.0.0.1
+zkHost 127.0.0.1:2181

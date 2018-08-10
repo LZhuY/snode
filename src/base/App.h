@@ -22,16 +22,16 @@ namespace SNODE{
 		virtual void update()=0;
 
 		virtual void onServerOnline(const char* path, const char* val){
-			char sty[25];
+/*			char sty[25];
 			char sid[25];
 			sscanf(path, "%[0-9a-z]/%[0-9a-z]", sty, sid);
-			std::cout<< sty << " " << sid << " " << val << std::endl;
+			std::cout << " onServerOnline " << path << " " << val << std::endl;*/
 		}
 		virtual void onServerOffline(const char* path, const char* val){
-			char sty[25];
+/*			char sty[25];
 			char sid[25];
 			sscanf(path, "%[0-9a-z]/%[0-9a-z]", sty, sid);
-			std::cout<< sty << " " << sid << " " << val << std::endl;
+			std::cout << " onServerOnline " << path << " " << val << std::endl;*/
 		}
 		static App* getServer(){ return Self_; }
 		static App* Self_;

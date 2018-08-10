@@ -1,10 +1,13 @@
 #include "TcpServer.h"
 #include "Channel.h"
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/types.h>
-#include <sys/epoll.h>
-#include <string.h>
+extern "C"{
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <sys/types.h>
+	#include <sys/epoll.h>
+	#include <arpa/inet.h>
+	#include <string.h>
+}
 
 namespace SNODE{
 
@@ -65,5 +68,28 @@ namespace SNODE{
 		//}else{
 			eventLoop_->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop_, 1, channel ) );
 		//}
+	}
+
+	Channel* TcpServer::connect2Node(int sid, std::string ip, int port){
+		struct sockaddr_in addr;
+		memset(&addr, 0, sizeof(addr));
+		addr.sin_family = AF_INET;
+		addr.sin_port = htons(port);
+		addr.sin_addr.s_addr = inet_addr(ip.c_str());
+
+		int fd = socket(AF_INET, SOCK_STREAM, 0);
+		connect(fd, (struct sockaddr*)&addr, sizeof(addr));
+		Channel* channel = new Channel(fd, false);
+		channel->events_ = EPOLL_CTL_ADD;
+		eventLoop_->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop_, 1, channel ) );
+		channels_[sid] = channel;
+
+		Buff buff;
+		int fid = 101;
+		buff >> fid;
+		buff.addSize();
+		channel->writeToChannel(buff.data(), buff.size());
+
+		return channel;
 	}
 }

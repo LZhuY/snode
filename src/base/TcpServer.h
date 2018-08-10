@@ -23,12 +23,14 @@ public:
 	void setEventLoop(EventLoop* loop) { eventLoop_ = loop; }
 	void startListen(std::string ip, int port);
 	void onConnect(int fd);
+	Channel* connect2Node(int sid, std::string ip, int port);
 private:
 	MessageHandler messageHandler_;
 	ErrorHandFunc  errorHandFunc_;
 
 	EventLoop* eventLoop_;
 	std::shared_ptr<EventLoopPool> eventLoopPool_;
+	std::map<int, Channel*> channels_;
 };
 }
 

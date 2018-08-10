@@ -16,7 +16,7 @@ namespace SNODE{
 	void Router::init(){
 		sid_ = Conf::getConf()->getInt("sid");
 		type_ = Conf::getConf()->getStr("type");
-		std::string addr = Conf::getConf()->getStr("listenAddr");
+		std::string addr = Conf::getConf()->getStr("MyAddr");
 		int port = Conf::getConf()->getInt("port");
 		
 		//zmq_ = new ZmqNode(ZMQ_ROUTER);
@@ -34,9 +34,9 @@ namespace SNODE{
 		zkp_ = new ZKp(zkHost);
 
 		char path[1024];
-		snprintf(path, 1024, "/Router/%d", sid_);
+		snprintf(path, 1024, "/%s/%d", type_.c_str(), sid_);
 		char myAddr[1024];
-		snprintf(myAddr, 1024, "127.0.0.1:%d", port);
+		snprintf(myAddr, 1024, "%s:%d", addr.c_str(), port);
 		zkp_->registerNode(path, myAddr);
 		App::Self_ = this;
 	}
