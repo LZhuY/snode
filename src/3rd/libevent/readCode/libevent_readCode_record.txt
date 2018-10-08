@@ -1,0 +1,92 @@
+1、event_base struct
+struct event_base {
+	const struct eventop *evsel; //IO复用操作接口结构集合，如epoll的epoll_add、epoll_create等接口
+	void *evbase; ///指向IO复用相关的结构，比如epollop结构，有epollop相关的字段。events等用于存放epoll_wait接口返回的活跃event
+
+	const struct eventop *evsigsel; //信号量相关操作
+	/** Data to implement the common signal handler code. */
+	struct evsig_info sig;
+
+	int event_running_priority;//当前正在触发的激活列表优先级。
+
+	struct evcallback_list *activequeues; //An array of nactivequeues queues for active event_callback,激活回调结构数组，每个event结构有自己的回调结构，保存回调接口、参数等。
+
+	/** Mapping from file descriptors to enabled (added) events */
+	struct event_io_map io; //hash列表，IO事件是fd为下标，每个下标放一个evmap_io结构，结构下有events数组用于保存这个fd的事件列表，如读事件、写事件等。
+
+	/** Mapping from signal numbers to enabled (added) events. */
+	struct event_signal_map sigmap;//hash列表，信号事件。信号触发直接走系统那套，不在libevent里管理触发。
+
+	/** Priority queue of events with timeouts. */
+	struct min_heap timeheap;//定时器最小堆。
+
+	/** The event whose callback is executing right now */
+	struct event_callback *current_event; //当前正要触发的回调结构。
+
+	/** List of event_onces that have not yet fired. */
+	LIST_HEAD(once_event_list, event_once) once_events;
+};
+
+2、event_add(struct event *ev, const struct timeval *tv)
+根据ev的类型分别加到base->io或base->sigmap hash列表中。
+
+！！！其中信号事件需要注意：
+统一事件源的工作原理如下：假如用户要监听SIGINT信号，那么在实现的内部就对SIGINT这个信号设置捕抓函数。此外，在实现的内部还要建立一条管道(pipe)，并把这个管道加入到多路IO复用函数中。当SIGINT这个信号发生后，捕抓函数将会被调用。而这个捕抓函数的工作就是往管道写入一个字符(这个字符往往等于所捕抓到信号的信号值)。此时，这个管道就变成是可读的了，多路IO复用函数能检测到这个管道变成可读的了。换言之，多路IO复用函数检测到SIGINT信号的发生，也就完成了对信号的监听工作。这个过程如下图所示：
+
+3、event_base_loop
+
+res = evsel->dispatch(base, tv_p); ///IO复用接口，如epoll_wait拿到激活的fd列表，然后根据fd在base->io中拿到对应的evmap_io结构，
+								   ///遍历evmap_io的events，把event的回调结构加到base->activityqueue列表中，根据优先级加入对应的列表中。
+timeout_process(base); ///处理定时事件，从最小堆顶拿出事件，如果超时则从堆中删除，然后加到activityqueue列表中。
+int n = event_process_active(base); ///前面的操作把激活状态的事件的回调结构加到activequeues列表之后，这里根据优先级顺序遍历列表，逐个触发回调。
+
+4、evconnlistener
+struct evconnlistener* evconnlistener_new_bind(struct event_base *base, evconnlistener_cb cb, void *ptr, unsigned flags, int backlog, const struct sockaddr *sa,int socklen) 
+///创建监听结构evconnlistener,注册监听事件evconnlistener_event->listener到base。
+///事件回调先触发到listener_read_cb，accept新的fd之后，fd当参数之一触发用户注册的evconnlistener_cd接口。
+
+5、bufferevent_sock
+bufferevent_sock创建bufferevent,并与把bufferevent与fd绑定。
+两个evbuffer,分别保存进出两个方向的数据。
+三个event,分别注册read、write、event事件。
+read、write事件先触发到 bufferevent_sock文件中定义的bufferevent_readcb、bufferevent_writecb接口，这两个接口再触发到用户通过bufferevent_setcb接口注册的回调接口。
+bufferevent的高低水位是通过evbuffer的字节变化回调函数实现的。高低水位变化可能会暂时从base中删除 read、write事件。
+write事件比较特殊一点，因为正常情况下write事件会一直触发。所以写完之后会先把写事件从base中删除，下次bufferevent_write接口被调用的时候再重新注册。
+写事件会先触发到bufferevent_sock中定义的bufferevent_writecb接口，因为写需要在连接connet成功之后，所以这接口里会检查fd连接的状态，如果没有连接成功则
+在下次写事件超时是再检查一次。
+
+6、libevent多线程
+
+1、evthread_pthread中定义好锁操作结构集合。
+GLOBAL struct evthread_lock_callbacks evthread_lock_fns_ = {
+	0, 0, NULL, NULL, NULL, NULL
+};
+
+
+2、设置开启多线程锁
+evthread_use_pthreads(void) ///这个接口设置evthread_lock_fns_变量为系统默认锁操作接口。evthread_cond_fns_为系统默认信号量操作函数。
+
+
+3、锁的使用例子
+int event_add(struct event *ev, const struct timeval *tv)
+{
+	EVBASE_ACQUIRE_LOCK(ev->ev_base, th_base_lock); ///加锁宏
+
+	res = event_add_nolock_(ev, tv, 0);
+
+	EVBASE_RELEASE_LOCK(ev->ev_base, th_base_lock);///释放锁宏
+	return (res);
+}
+
+
+4、信号量
+GLOBAL struct evthread_condition_callbacks evthread_cond_fns_ = {
+	0, NULL, NULL, NULL, NULL
+};
+
+5、信号量使用
+EVTHREAD_COND_WAIT(base->current_event_cond, base->th_base_lock); ///等待唤醒
+
+
+6、notice机制 evthread_notify_base(base);
+ Libevent提供的唤醒主线程机制也是挺简单的，其原理和《信号event的处理》一文中提到的方法是一样的。提供一个内部的IO  event，专门用于唤醒主线程。当其他线程有event要add进来时，就往这个内部的IO event写入一个字节。此时，主线程在dispatch时，就能检测到可读，也就醒来了。这就完成了通知。这过程和Libevent处理信号event是一样的。
