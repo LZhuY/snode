@@ -125,7 +125,7 @@ void ZmqNode::onRecv(){
 }
 
 void ZmqNode::addToLoop(){
-    int fdSize = sizeof(fd_);
+    size_t fdSize = sizeof(fd_);
     zmq_getsockopt(sock_, ZMQ_FD, &fd_, &fdSize);
 
     Channel* channel = new Channel(fd_, false);
