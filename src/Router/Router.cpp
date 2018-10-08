@@ -19,9 +19,9 @@ namespace SNODE{
 		std::string addr = Conf::getConf()->getStr("MyAddr");
 		int port = Conf::getConf()->getInt("port");
 		
-		//zmq_ = new ZmqNode(ZMQ_ROUTER);
-		//zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
-		//zmq_->bind(addr.c_str());
+		zmq_ = new ZmqNode(ZMQ_ROUTER);
+		zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
+		zmq_->bind(addr.c_str());
 
 		eventLoop_ = new EventLoop(-1);
 		eventLoop_->setLooper(new EpollLooper());

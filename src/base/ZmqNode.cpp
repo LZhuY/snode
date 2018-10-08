@@ -1,5 +1,6 @@
-/*#include "EventLoop.h"
+#include "EventLoop.h"
 #include "ZmqNode.h"
+#include "Channel.h"
 #include <iostream>
 
 namespace SNODE{
@@ -19,22 +20,12 @@ void ZmqNode::unlock(){}
 
 int ZmqNode::bind(const char* addr){
 	zmq_bind(sock_, addr);
-    //int fd = zsock_fd(sock_);
-
-    //Channel* channel = new Channel(fd, false);
-    //channel->setOnReadMssage( std::bind( &ZmqNode::recvMsg, this ) );
-    //channel->events_ = EPOLL_CTL_ADD;
-    //eventLoop_->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop_, 1, channel ) );
+    addToLoop();
 }
 
 int ZmqNode::connect(const char* addr){
 	zmq_connect(sock_, addr);
-    //int fd = zsock_fd(sock_);
-
-    //Channel* channel = new Channel(fd, false);
-    //channel->setOnReadMssage( std::bind( &ZmqNode::recvMsg, this ) );
-    //channel->events_ = EPOLL_CTL_ADD;
-    //eventLoop_->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop_, 1, channel ) );
+    addToLoop();
 }
 
 void ZmqNode::setOpt(int opt, const void* val, size_t sz){
@@ -128,4 +119,18 @@ int ZmqNode::recvMsg(Zmqmsg* zMsg){
     return errno;
 }
 
-}*/
+void ZmqNode::onRecv(){
+    Zmqmsg zMsg;
+    recvMsg(&zMsg);
+}
+
+void ZmqNode::addToLoop(){
+    int fdSize = sizeof(fd_);
+    zmq_getsockopt(sock_, ZMQ_FD, &fd_, &fdSize);
+
+    Channel* channel = new Channel(fd_, false);
+    channel->setOnReadMssage( std::bind( &ZmqNode::onRecv, this ) );
+    channel->events_ = EPOLL_CTL_ADD;
+    eventLoop_->runInLoop( std::bind( &EventLoop::addToLooper, eventLoop_, 1, channel ) );
+}
+}
