@@ -79,7 +79,7 @@ namespace SNODE{
 		std::cout << "Hall onServerOnline " << sty << " " << sid << " " << ip << " " << port << std::endl;
 
 		if(strcmp(sty, "Router"))
-			net_->connect2Node(std::string(ip), atoi(port));
+			net_->connect2Node(sid_, std::string(ip), atoi(port));
 	}
 	void onServerOffline(const char* path, const char* val){
 		char sty[25];
