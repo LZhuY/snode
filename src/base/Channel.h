@@ -47,8 +47,8 @@ public:
 	void handlerEvent();
 	bool isListen(){ return isListen_; }
 
-	void setOnReadMssage(OnReadMssage& func){ onReadMssage_ = func; }
-	void setErrorHandler(ErrorHandlerFunc& func){ errorHandler_ = func;  }
+	void setOnReadMssage(OnReadMssage&& func){ onReadMssage_ = func; }
+	void setErrorHandler(ErrorHandlerFunc&& func){ errorHandler_ = func;  }
 	void setMessageHandFunc(MessageHandFunc& func){ messageHandFunc_ = func; }
 	void setConnectHandFunc(ConnectHandFunc&& func){ connectHandFunc_ = std::move(func); }
 	int fd_;
