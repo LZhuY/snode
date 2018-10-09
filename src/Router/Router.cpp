@@ -18,10 +18,6 @@ namespace SNODE{
 		type_ = Conf::getConf()->getStr("type");
 		std::string addr = Conf::getConf()->getStr("MyAddr");
 		int port = Conf::getConf()->getInt("port");
-		
-		zmq_ = new ZmqNode(ZMQ_ROUTER);
-		zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
-		zmq_->bind(addr.c_str());
 
 		eventLoop_ = new EventLoop(-1);
 		eventLoop_->setLooper(new EpollLooper());
@@ -30,6 +26,11 @@ namespace SNODE{
 		net_->setEventLoop(eventLoop_);
 		net_->startListen(addr, port);
 
+		zmq_ = new ZmqNode(ZMQ_ROUTER);
+		zmq_->setEventLoop(eventLoop_);
+		zmq_->setOpt(ZMQ_IDENTITY, &sid_, sizeof(sid_));
+		zmq_->bind(addr.c_str());
+		
 		std::string zkHost = Conf::getConf()->getStr("zkHost");
 		zkp_ = new ZKp(zkHost);
 
